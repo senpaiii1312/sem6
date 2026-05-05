@@ -11,7 +11,7 @@ G = (3, 6)
 # private key
 d = random.randint(1, 10)
 
-# public key (simple multiplication)
+# public key (simple multiplication)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 Q = (d * G[0] % p, d * G[1] % p)
 
 print("Private Key:", d)
