@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 # Load dataset
-df = pd.read_csv(r"C:\Users\Sujal\Desktop\MingW2bin\bin_73564975682_ds\titanic.csv")
+df = pd.read_csv(r"C:\Users\Sujal\Desktop\ultimate_sem6\bin_73564975682_ds\titanic.csv")
 
 # -----------------------------
 # Normalize column names (IMPORTANT FIX)

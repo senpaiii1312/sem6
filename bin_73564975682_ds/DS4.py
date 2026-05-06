@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
 # Load dataset
-raw_df = pd.read_csv(r"C:\Users\Sujal\Desktop\MingW2bin\bin_73564975682_ds\housing.csv")
+raw_df = pd.read_csv(r"C:\Users\Sujal\Desktop\ultimate_sem6\bin_73564975682_ds\housing.csv")
 
 # 🔥 Ensure even rows (VERY IMPORTANT)
 if len(raw_df) % 2 != 0:

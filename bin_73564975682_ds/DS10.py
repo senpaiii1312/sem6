@@ -41,6 +41,7 @@ for col in features:
 for col in features:
     plt.figure(figsize=(7, 4))
     sns.boxplot(x=df[col])
+    
     plt.title(f"Boxplot of {col}")
     plt.xlabel(col)
     plt.show()
