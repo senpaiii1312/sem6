@@ -1,48 +1,109 @@
+# =========================================================
+# Descriptive Statistics
+# Measures of Central Tendency and Variability
+# =========================================================
+
+# ---------------------------------------------------------
+# 1. Import Required Libraries
+# ---------------------------------------------------------
+
 import pandas as pd
 import numpy as np
+import seaborn as sns
 
-df = pd.read_csv(r"C:\Users\Sujal\Desktop\ultimate_sem6\bin_73564975682_ds\iris.csv")
+# ---------------------------------------------------------
+# 2. Load Iris Dataset
+# ---------------------------------------------------------
 
-print("First Five Records")
+df = sns.load_dataset("iris")
+
+print("First 5 Rows:\n")
 print(df.head())
 
-print("\nShape of Dataset")
+# ---------------------------------------------------------
+# 3. Dataset Information
+# ---------------------------------------------------------
+
+print("\nDataset Shape:")
 print(df.shape)
 
-print("\nColumn Names")
+print("\nColumn Names:")
 print(df.columns)
 
-print("\nSummary Statistics Grouped by Species")
-grouped = df.groupby("species")["sepal_length"].agg(
-    ["mean", "median", "min", "max", "std"]
-)
+# ---------------------------------------------------------
+# 4. Summary Statistics Grouped by Species
+# ---------------------------------------------------------
 
-print(grouped)
+grouped = df.groupby('species')
 
-species_numeric = {
-    "Iris-setosa": 0,
-    "Iris-versicolor": 1,
-    "Iris-virginica": 2
-}
+# Mean
+print("\nMean Values Grouped by Species:\n")
+print(grouped.mean())
 
-df["species_value"] = df["species"].map(species_numeric)
+# Median
+print("\nMedian Values Grouped by Species:\n")
+print(grouped.median())
 
-print("\nNumeric Value for Each Category")
-print(df[["species", "species_value"]].drop_duplicates())
+# Minimum
+print("\nMinimum Values Grouped by Species:\n")
+print(grouped.min())
 
-species_list = df["species_value"].tolist()
+# Maximum
+print("\nMaximum Values Grouped by Species:\n")
+print(grouped.max())
 
-print("\nList of Numeric Values")
-print(species_list)
+# Standard Deviation
+print("\nStandard Deviation Grouped by Species:\n")
+print(grouped.std())
 
-print("\nStatistical Details of Each Species")
+# ---------------------------------------------------------
+# 5. Create List of Sepal Length for Each Species
+# ---------------------------------------------------------
 
-for flower in df["species"].unique():
-    print("\nSpecies:", flower)
+species_list = {}
 
-    subset = df[df["species"] == flower]
+for species in df['species'].unique():
+    
+    species_list[species] = list(
+        df[df['species'] == species]['sepal_length']
+    )
 
-    print(subset.describe())
+print("\nSepal Length List for Each Species:\n")
 
-    print("Percentiles")
-    print(subset.quantile([0.25, 0.50, 0.75], numeric_only=True))
+for key, value in species_list.items():
+    print(key, ":", value)
+
+# ---------------------------------------------------------
+# 6. Basic Statistical Details
+# ---------------------------------------------------------
+
+print("\nComplete Statistical Details:\n")
+
+print(df.describe())
+
+# ---------------------------------------------------------
+# 7. Percentiles
+# ---------------------------------------------------------
+
+print("\n25th Percentile:\n")
+print(df.quantile(0.25, numeric_only=True))
+
+print("\n50th Percentile (Median):\n")
+print(df.quantile(0.50, numeric_only=True))
+
+print("\n75th Percentile:\n")
+print(df.quantile(0.75, numeric_only=True))
+
+# ---------------------------------------------------------
+# 8. Mean
+# ---------------------------------------------------------
+
+print("\nMean of Numeric Columns:\n")
+print(df.mean(numeric_only=True))
+
+# ---------------------------------------------------------
+# 9. Standard Deviation
+# ---------------------------------------------------------
+
+print("\nStandard Deviation of Numeric Columns:\n")
+print(df.std(numeric_only=True))

@@ -1,84 +1,108 @@
+# =========================================================
+# Data Wrangling - I
+# Dataset Used: Titanic Dataset
+# Using get_dummies() for Categorical Encoding
+# =========================================================
+
+# ---------------------------------------------------------
+# 1. Import Required Libraries
+# ---------------------------------------------------------
+
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler
 
-# Load dataset
+# ---------------------------------------------------------
+# 2. Load Dataset
+# ---------------------------------------------------------
+
+# Reading CSV file
 df = pd.read_csv(r"C:\Users\Sujal\Desktop\ultimate_sem6\bin_73564975682_ds\titanic.csv")
 
-# -----------------------------
-# Normalize column names (IMPORTANT FIX)
-# -----------------------------
-df.columns = df.columns.str.strip().str.lower()
+# Display first 5 rows
+print("First 5 Rows of Dataset:\n")
+print(df.head())
 
-# Basic Info
-print("First 5 Rows\n", df.head())
-print("\nDataset Shape\n", df.shape)
-print("\nColumn Names\n", df.columns)
-print("\nData Types\n", df.dtypes)
-print("\nMissing Values\n", df.isnull().sum())
-print("\nStatistical Summary\n", df.describe(include="all"))
+# ---------------------------------------------------------
+# 3. Check Dataset Information
+# ---------------------------------------------------------
 
-# -----------------------------
-# Handling Missing Values (SAFE for both datasets)
-# -----------------------------
-if "age" in df.columns:
-    df["age"].fillna(df["age"].mean(), inplace=True)
+print("\nDataset Shape:")
+print(df.shape)
 
-if "embarked" in df.columns:
-    df["embarked"].fillna(df["embarked"].mode()[0], inplace=True)
+print("\nColumn Names:")
+print(df.columns)
 
-if "cabin" in df.columns:
-    df["cabin"].fillna("unknown", inplace=True)
+print("\nDataset Information:")
+print(df.info())
 
-if "deck" in df.columns:
-    df["deck"].fillna("unknown", inplace=True)
+# ---------------------------------------------------------
+# 4. Data Preprocessing
+# ---------------------------------------------------------
 
-if "embark_town" in df.columns:
-    df["embark_town"].fillna(df["embark_town"].mode()[0], inplace=True)
+# Check missing values
+print("\nMissing Values:")
+print(df.isnull().sum())
 
-print("\nMissing Values After Filling\n", df.isnull().sum())
+# Statistical Summary
+print("\nStatistical Summary:")
+print(df.describe())
 
-# -----------------------------
-# Data Type Conversion (only if present)
-# -----------------------------
-type_map = {
-    "survived": "int",
-    "pclass": "int",
-    "fare": "float"
-}
+# Data Types
+print("\nData Types:")
+print(df.dtypes)
 
-for col, dtype in type_map.items():
-    if col in df.columns:
-        df[col] = df[col].astype(dtype)
+# ---------------------------------------------------------
+# Handling Missing Values
+# ---------------------------------------------------------
 
-# -----------------------------
-# Label Encoding (only existing columns)
-# -----------------------------
-label = LabelEncoder()
+# Fill missing Age values with mean
+df['Age'] = df['Age'].fillna(df['Age'].mean())
 
-categorical_cols = [
-    "sex", "embarked", "class", "who",
-    "deck", "embark_town", "alive",
-    "alone", "adult_male", "cabin"
-]
+# Fill missing Embarked values with mode
+df['Embarked'] = df['Embarked'].fillna(df['Embarked'].mode()[0])
 
-for col in categorical_cols:
-    if col in df.columns:
-        df[col] = label.fit_transform(df[col])
+print("\nMissing Values After Handling:")
+print(df.isnull().sum())
 
-# -----------------------------
-# Feature Scaling
-# -----------------------------
+# ---------------------------------------------------------
+# 5. Data Formatting and Normalization
+# ---------------------------------------------------------
+
+# Convert Survived column into integer type
+df['Survived'] = df['Survived'].astype(int)
+
+print("\nUpdated Data Types:")
+print(df.dtypes)
+
+# Normalize Age and Fare columns
 scaler = MinMaxScaler()
 
-scale_cols = ["age", "fare"]
+df[['Age', 'Fare']] = scaler.fit_transform(df[['Age', 'Fare']])
 
-for col in scale_cols:
-    if col in df.columns:
-        df[[col]] = scaler.fit_transform(df[[col]])
+print("\nNormalized Age and Fare Columns:")
+print(df[['Age', 'Fare']].head())
 
-# -----------------------------
-# Final Output
-# -----------------------------
-print("\nFormatted Data Types\n", df.dtypes)
-print("\nFinal Dataset Sample\n", df.head())
+# ---------------------------------------------------------
+# 6. Convert Categorical Variables into Numeric
+#    Using get_dummies()
+# ---------------------------------------------------------
+
+# Convert Sex column into dummy variables
+df = pd.get_dummies(df, columns=['Sex'], drop_first=True)
+
+# Convert Embarked column into dummy variables
+df = pd.get_dummies(df, columns=['Embarked'], drop_first=True)
+
+print("\nDataset After Encoding:")
+print(df.head())
+
+# ---------------------------------------------------------
+# Final Dataset Information
+# ---------------------------------------------------------
+
+print("\nFinal Dataset Shape:")
+print(df.shape)
+
+print("\nFinal Data Types:")
+print(df.dtypes)

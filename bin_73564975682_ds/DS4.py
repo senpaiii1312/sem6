@@ -1,72 +1,130 @@
+# =========================================================
+# Data Analytics I
+# Linear Regression on Boston Housing Dataset
+# =========================================================
+
+# ---------------------------------------------------------
+# 1. Import Required Libraries
+# ---------------------------------------------------------
+
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
-# Load dataset
-raw_df = pd.read_csv(r"C:\Users\Sujal\Desktop\ultimate_sem6\bin_73564975682_ds\housing.csv")
+# ---------------------------------------------------------
+# 2. Load Dataset
+# ---------------------------------------------------------
 
-# 🔥 Ensure even rows (VERY IMPORTANT)
-if len(raw_df) % 2 != 0:
-    raw_df = raw_df.iloc[:-1]
+# Read dataset
+df = pd.read_csv(r"C:\Users\Sujal\Desktop\ultimate_sem6\bin_73564975682_ds\housing.csv")
 
-# Create X and y
-X = np.hstack([
-    raw_df.values[::2, :],
-    raw_df.values[1::2, :2]
-])
+print("First 5 Rows:\n")
+print(df.head())
 
-y = raw_df.values[1::2, 2]
+# ---------------------------------------------------------
+# 3. Check Dataset Information
+# ---------------------------------------------------------
 
-# 🔥 CHECK SHAPE
-print("Shape of X:", X.shape)
+print("\nDataset Shape:")
+print(df.shape)
 
-# Create dynamic column names (AUTO FIX)
-columns = [f"Feature_{i+1}" for i in range(X.shape[1])]
+print("\nColumn Names:")
+print(df.columns)
 
-X = pd.DataFrame(X, columns=columns)
+print("\nMissing Values:\n")
+print(df.isnull().sum())
 
-print("\nFirst Five Rows")
+# ---------------------------------------------------------
+# 4. Handle Missing Values
+# ---------------------------------------------------------
+
+# Fill missing values with mean
+
+df = df.fillna(df.mean())
+
+print("\nMissing Values After Handling:\n")
+print(df.isnull().sum())
+
+# ---------------------------------------------------------
+# 5. Define Features and Target Variable
+# ---------------------------------------------------------
+
+# Features (Independent Variables)
+X = df.drop("medv", axis=1)
+
+# Target Variable (Dependent Variable)
+y = df["medv"]
+
+print("\nFeatures:\n")
 print(X.head())
 
-print("\nShape of Dataset")
-print(X.shape)
+print("\nTarget:\n")
+print(y.head())
 
-# Train-test split
+# ---------------------------------------------------------
+# 6. Split Dataset into Training and Testing Data
+# ---------------------------------------------------------
+
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
 )
 
-# Model
+print("\nTraining Data Shape:")
+print(X_train.shape)
+
+print("\nTesting Data Shape:")
+print(X_test.shape)
+
+# ---------------------------------------------------------
+# 7. Create Linear Regression Model
+# ---------------------------------------------------------
+
 model = LinearRegression()
+
+# ---------------------------------------------------------
+# 8. Train Model
+# ---------------------------------------------------------
+
 model.fit(X_train, y_train)
 
-# Prediction
+print("\nModel Training Completed")
+
+# ---------------------------------------------------------
+# 9. Predict House Prices
+# ---------------------------------------------------------
+
 y_pred = model.predict(X_test)
 
-# Results
-print("\nCoefficients")
-print(model.coef_)
+print("\nPredicted Prices:\n")
+print(y_pred[:10])
 
-print("\nIntercept")
-print(model.intercept_)
+# ---------------------------------------------------------
+# 10. Model Evaluation
+# ---------------------------------------------------------
 
 mse = mean_squared_error(y_test, y_pred)
-rmse = np.sqrt(mse)
+
 r2 = r2_score(y_test, y_pred)
 
-print("\nMSE :", mse)
-print("RMSE :", rmse)
-print("R2 Score :", r2)
+print("\nMean Squared Error:")
+print(mse)
 
-# Plot
-plt.figure(figsize=(8, 6))
-plt.scatter(y_test, y_pred)
-plt.xlabel("Actual Price")
-plt.ylabel("Predicted Price")
-plt.title("Actual vs Predicted House Price")
-plt.grid(True)
-plt.show()
+print("\nR2 Score:")
+print(r2)
+
+# ---------------------------------------------------------
+# 11. Compare Actual vs Predicted Values
+# ---------------------------------------------------------
+
+comparison = pd.DataFrame({
+    "Actual Price": y_test.values,
+    "Predicted Price": y_pred
+})
+
+print("\nActual vs Predicted Prices:\n")
+print(comparison.head(10))
