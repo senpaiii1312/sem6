@@ -1,6 +1,0 @@
-Day Temperature DewPoint WindSpeed
-1 30 22 12
-2 32 24 10
-3 29 21 15
-4 35 25 14
-5 31 23 11
